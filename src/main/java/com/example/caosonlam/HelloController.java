@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 public class HelloController {
-    private String a = "defaultA";
-    private String b = "defaultB";
+    private String a = "nullA";
+    private String b = "nullB";
 
     @GetMapping("/")
     public String index() {
