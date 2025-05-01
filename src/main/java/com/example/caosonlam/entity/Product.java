@@ -1,6 +1,6 @@
 package com.example.caosonlam.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.*; // Đảm bảo bạn đã import đúng các thư viện
 import java.util.Date;
 
 @Entity
@@ -11,11 +11,10 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private int category_id;
-    private int brand_id;
     private String name;
     private String slug;
     private String content;
+    private String image;
     private double price;
     private String description;
     private int created_by;
@@ -24,6 +23,13 @@ public class Product {
     private Date updated_at;
     private int status;
 
+    @Column(name = "category_id") // Ánh xạ với cột category_id trong cơ sở dữ liệu
+    private Long categoryId;
+
+    @Column(name = "brand_id") // Ánh xạ với cột brand_id trong cơ sở dữ liệu
+    private Long brandId;
+
+    // Getter và Setter cho id
     public Long getId() {
         return id;
     }
@@ -32,22 +38,7 @@ public class Product {
         this.id = id;
     }
 
-    public int getCategoryId() {
-        return category_id;
-    }
-
-    public void setCategoryId(int category_id) {
-        this.category_id = category_id;
-    }
-
-    public int getBrandId() {
-        return brand_id;
-    }
-
-    public void setBrandId(int brand_id) {
-        this.brand_id = brand_id;
-    }
-
+    // Getter và Setter cho name
     public String getName() {
         return name;
     }
@@ -56,6 +47,7 @@ public class Product {
         this.name = name;
     }
 
+    // Getter và Setter cho slug
     public String getSlug() {
         return slug;
     }
@@ -64,6 +56,7 @@ public class Product {
         this.slug = slug;
     }
 
+    // Getter và Setter cho content
     public String getContent() {
         return content;
     }
@@ -72,6 +65,7 @@ public class Product {
         this.content = content;
     }
 
+    // Getter và Setter cho price
     public double getPrice() {
         return price;
     }
@@ -80,6 +74,7 @@ public class Product {
         this.price = price;
     }
 
+    // Getter và Setter cho description
     public String getDescription() {
         return description;
     }
@@ -88,6 +83,7 @@ public class Product {
         this.description = description;
     }
 
+    // Getter và Setter cho created_by
     public int getCreatedBy() {
         return created_by;
     }
@@ -96,6 +92,7 @@ public class Product {
         this.created_by = created_by;
     }
 
+    // Getter và Setter cho updated_by
     public int getUpdatedBy() {
         return updated_by;
     }
@@ -104,6 +101,7 @@ public class Product {
         this.updated_by = updated_by;
     }
 
+    // Getter và Setter cho created_at
     public Date getCreatedAt() {
         return created_at;
     }
@@ -112,6 +110,7 @@ public class Product {
         this.created_at = created_at;
     }
 
+    // Getter và Setter cho updated_at
     public Date getUpdatedAt() {
         return updated_at;
     }
@@ -120,11 +119,38 @@ public class Product {
         this.updated_at = updated_at;
     }
 
+    // Getter và Setter cho status
     public int getStatus() {
         return status;
     }
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    // Getter và Setter cho categoryId
+    public Long getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    // Getter và Setter cho brandId
+    public Long getBrandId() {
+        return brandId;
+    }
+
+    public void setBrandId(Long brandId) {
+        this.brandId = brandId;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }
