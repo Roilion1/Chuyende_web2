@@ -79,21 +79,29 @@ public class ProductController {
         return new ResponseEntity<>(new InputStreamResource(imageStream), headers, HttpStatus.OK);
     }
 
-    // // Lấy sản phẩm theo categoryId
-    // @GetMapping("/categories/{categoryId}/products")
-    // public ResponseEntity<List<Product>> getProductsByCategory(@PathVariable Long
-    // categoryId) {
-    // try {
-    // List<Product> products = productService.getProductsByCategoryId(categoryId);
-    // if (products.isEmpty()) {
-    // return ResponseEntity.noContent().build(); // Trả về 204 nếu không có sản
-    // phẩm
-    // }
-    // return ResponseEntity.ok(products); // Trả về 200 nếu có sản phẩm
-    // } catch (Exception e) {
-    // // Log exception và trả về mã lỗi 500 nếu có lỗi server
-    // e.printStackTrace();
-    // return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-    // }
-    // }
+    @GetMapping("/{id}")
+    public ResponseEntity<Product> getProductById(@PathVariable Long id) {
+        Product product = productService.getProductById(id);
+        if (product != null) {
+            return ResponseEntity.ok(product);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    // Lấy sản phẩm theo categoryId
+    @GetMapping("/categories/{categoryId}/products")
+    public ResponseEntity<List<Product>> getProductsByCategory(@PathVariable Long categoryId) {
+        try {
+            List<Product> products = productService.getProductsByCategoryId(categoryId);
+            if (products.isEmpty()) {
+                return ResponseEntity.noContent().build(); // Trả về 204 nếu không có sản phẩm
+            }
+            return ResponseEntity.ok(products); // Trả về 200 nếu có sản phẩm
+        } catch (Exception e) {
+            // Log exception và trả về mã lỗi 500 nếu có lỗi server
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
 }

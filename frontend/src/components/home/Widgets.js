@@ -1,135 +1,108 @@
-import React, { Component } from 'react'
-import axios from 'axios'
-import Slider from 'react-slick'
-import { Api } from '../../api/Api';
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import { Api } from './../../api/Api';
 
-class WidgetColumn extends Component {
+class FavoriteWidgetColumn extends Component {
     constructor(props) {
-        super(props)
-
+        super(props);
         this.state = {
-            products: []
-        }
+            favorites: []
+        };
     }
 
     componentDidMount() {
-
-        this.getProducts()
+        this.loadFavorites();
+        window.addEventListener("storage", this.loadFavorites);
     }
 
-    getProducts() {
+    componentWillUnmount() {
+        window.removeEventListener("storage", this.loadFavorites);
+    }
 
-        axios.get(`${Api}/product/categories/1/top-selling`).then((
-            response
-        ) => {
-            this.setState({
-                products: [...response.data]
-            })
-        }).catch(function (error) {
-            console.log(error)
-        })
+    loadFavorites = () => {
+        const data = JSON.parse(localStorage.getItem("favorites")) || [];
+        this.setState({ favorites: data });
+    }
+
+    removeFavorite = (id) => {
+        const updated = this.state.favorites.filter(item => item.id !== id);
+        localStorage.setItem("favorites", JSON.stringify(updated));
+        this.setState({ favorites: updated });
     }
 
     render() {
-
-        var settings = {
-            infinite: true,
-            autoplay: true,
-            speed: 300,
-            dots: true,
-            arrows: false,
-        }
-
+        const { favorites } = this.state;
         return (
             <div>
                 <div className="section-title">
-                    <h4 className="title">{this.props.title}</h4>
-                    <div className="section-nav">
-                        <div id="slick-nav-1" className="products-slick-nav"></div>
-                    </div>
+                    <h4 className="title">Sản phẩm yêu thích ({favorites.length})</h4>
                 </div>
-
-                <div className="products-widget-slick" data-nav="#slick-nav-1" >
-                    <Slider {...settings}>
-                        <div>
-                            {this.state.products.map((product, index) => (
-                                <React.Fragment key={product.id}>
-                                    {index < 3 &&
-                                        <div className="product-widget">
-                                            
-                                            <div className="product-body">
-                                                <p className="product-category">{product.category.name}</p>
-                                                <h3 className="product-name"><a href="#">{product.name}</a></h3>
-                                                {
-                                                    (new Date(product.sale_expires).getTime() > new Date().getTime()) ?
-                                                        <h4 className="product-price">${product.price - (product.price * product.sale)} <del className="product-old-price">${product.price}</del></h4>
-                                                        :
-                                                        <h4 className="product-price">${product.price}</h4>
-                                                }
-                                            </div>
-                                        </div>}
-                                </React.Fragment>
-                            ))}
-                        </div>
-                        <div>
-                            {this.state.products.map((product, index) => (
-                                <React.Fragment key={product.id}>
-                                    {(index >= 3 && index < 6) &&
-                                        <div className="product-widget">
-                                            
-                                            <div className="product-body">
-                                                <p className="product-category">{product.category.name}</p>
-                                                <h3 className="product-name"><a href="#">{product.name}</a></h3>
-                                                {
-                                                    (new Date(product.sale_expires).getTime() > new Date().getTime()) ?
-                                                        <h4 className="product-price">${product.price - (product.price * product.sale)} <del className="product-old-price">${product.price}</del></h4>
-                                                        :
-                                                        <h4 className="product-price">${product.price}</h4>
-                                                }
-                                            </div>
-                                        </div>}
-                                </React.Fragment>
-                            ))}
-                        </div>
-                    </Slider>
+                <div className="row">
+                    {favorites.length === 0 ? (
+                        <p className="col-12 text-center text-muted">Bạn chưa yêu thích sản phẩm nào.</p>
+                    ) : (
+                        favorites.map((product) => (
+                            <div className="col-md-3 col-sm-6 col-xs-12 mb-4" key={product.id}>
+                                <div className="card h-100 shadow-sm border rounded">
+                                    <img
+                                        src={`${Api}/images/${product.image}`}
+                                        alt={product.name}
+                                        style={{
+                                            width: '100%',
+                                            height: '160px',
+                                            objectFit: 'cover',
+                                            borderRadius: '8px',
+                                            marginBottom: '10px'
+                                        }}
+                                    />
+                                    <div className="card-body text-center">
+                                        <p className="text-muted mb-1">{product.category?.name }</p>
+                                        <h5 className="card-title mb-2" style={{ fontSize: '1.1rem' }}>
+                                            <Link to={`/product/${product.id}`} className="text-dark text-decoration-none">
+                                                {product.name}
+                                            </Link>
+                                        </h5>
+                                        <div className="mb-2">
+                                            {new Date(product.sale_expires).getTime() > new Date().getTime() ? (
+                                                <h6 className="text-danger">
+                                                    ${product.price - (product.price * product.sale)}
+                                                    <del className="text-muted ml-2">${product.price}</del>
+                                                </h6>
+                                            ) : (
+                                                <h6 className="text-dark">${product.price}</h6>
+                                            )}
+                                        </div>
+                                        <button
+                                            className="btn btn-outline-danger btn-sm"
+                                            onClick={() => this.removeFavorite(product.id)}
+                                        >
+                                            Bỏ yêu thích
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        ))
+                    )}
                 </div>
             </div>
-        )
+        );
     }
 }
 
 class Widgets extends Component {
-    constructor(props) {
-        super(props)
-    }
-
     render() {
         return (
-            <div className="section">
-                {/* <!-- container --> */}
+            <div className="section py-4">
                 <div className="container">
-                    {/* <!-- row --> */}
                     <div className="row">
-
-                        <div className="col-md-4 col-xs-6">
-                            <WidgetColumn title="Top selling" />
+                        <div className="col-12">
+                            <FavoriteWidgetColumn />
                         </div>
-
-                        <div className="col-md-4 col-xs-6">
-                            <WidgetColumn title="Top selling" />
-                        </div>
-
-                        <div className="col-md-4 col-xs-6">
-                            <WidgetColumn title="Top selling" />
-                        </div>
-
                     </div>
-                    {/* <!-- /row --> */}
                 </div>
-                {/* <!-- /container --> */}
             </div>
-        )
+        );
     }
 }
 
-export default Widgets
+export default Widgets;

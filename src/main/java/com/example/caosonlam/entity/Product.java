@@ -1,6 +1,6 @@
 package com.example.caosonlam.entity;
 
-import jakarta.persistence.*; // Đảm bảo bạn đã import đúng các thư viện
+import jakarta.persistence.*;
 import java.util.Date;
 
 @Entity

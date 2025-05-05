@@ -1,7 +1,6 @@
 package com.example.caosonlam.entity;
 
 import jakarta.persistence.*;
-// import java.util.Date;
 
 @Entity
 @Table(name = "order_detail")
@@ -16,6 +15,10 @@ public class OrderDetail {
     private double price;
     private double discount = 0;
     private double amount;
+
+    @ManyToOne
+    @JoinColumn(name = "order_id") // Thêm khóa ngoại để liên kết với bảng Order
+    private Order order;
 
     public Long getId() {
         return id;
@@ -63,5 +66,13 @@ public class OrderDetail {
 
     public void setAmount(double amount) {
         this.amount = amount;
+    }
+
+    public Order getOrder() {
+        return order;
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
     }
 }

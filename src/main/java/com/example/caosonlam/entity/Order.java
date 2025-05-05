@@ -2,6 +2,7 @@ package com.example.caosonlam.entity;
 
 import jakarta.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "`order`")
@@ -20,6 +21,9 @@ public class Order {
     private Date created_at;
     private Date updated_at;
     private int status;
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<OrderDetail> orderDetails;
 
     public Long getId() {
         return id;
@@ -99,5 +103,13 @@ public class Order {
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    public List<OrderDetail> getOrderDetails() {
+        return orderDetails;
+    }
+
+    public void setOrderDetails(List<OrderDetail> orderDetails) {
+        this.orderDetails = orderDetails;
     }
 }

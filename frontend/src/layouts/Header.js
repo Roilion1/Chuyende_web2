@@ -194,7 +194,7 @@ class Header extends Component {
 								<div className="header-ctn">
 									{/* Wishlist */}
 									<div>
-										<Link to="/wishlist">
+										<Link to="/widgets">
 											<i className="fa fa-heart"></i>
 											<span>Yêu thích</span>
 											{this.props.wishlistCount > 0 && <div className="qty">{this.props.wishlistCount}</div>}

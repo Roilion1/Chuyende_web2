@@ -6,14 +6,17 @@ import App from './App'
 import Home from './layouts/Home'
 import store from './state/store';
 import Admin from './admin/Admin';
-import ProductList from './admin/components/Product/list.component';
-import CreateProduct from './admin/components/Product/create.component';
-import EditProduct from './admin/components/Product/edit.component';
+import ProductList from './admin/components/Product/ListProduct';
 
-import CategoryList from './admin/components/Category/CategoryList';
 import Login from './components/auth/Login';
 import Register from './components/auth/Register';
 import Product from './components/home/Product';
+import Widgets from './components/home/Widgets';
+import ShoppingCart from './components/pages/ShoppingCart';
+import ProductDetail from './components/pages/ProductDetail';
+import Checkout from './components/pages/Checkout';
+import CreateProduct from './admin/components/Product/CreateProduct';
+import EditProduct from './admin/components/Product/EditProduct';
 
 const router = createBrowserRouter([
   {
@@ -36,6 +39,22 @@ const router = createBrowserRouter([
         path: 'products',
         element: <Product />,
       },
+      {
+        path: 'product/:productId',
+        element: <ProductDetail />,
+      },
+      {
+        path: 'widgets',
+        element: <Widgets />,
+      },
+      {
+        path: 'shopping-cart',
+        element: <ShoppingCart />,
+      },
+      {
+        path: 'Checkout',
+        element: <Checkout />,
+      },
 
     ]
   },
@@ -48,17 +67,12 @@ const router = createBrowserRouter([
         element: <ProductList />
       },
       {
-
-        path: 'dashboard/product/create',
+        path: 'product/create',
         element: <CreateProduct />,
       },
       {
-        path: 'dashboard/product/edit/:id',
+        path: 'product/edit/:id',
         element: <EditProduct />,
-      },
-      {
-        path: '/dashboard/category',
-        element: <CategoryList />
       }
     ],
   },

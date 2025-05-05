@@ -1,7 +1,5 @@
 package com.example.caosonlam.controller;
 
-import com.example.caosonlam.entity.Product;
-import com.example.caosonlam.repository.ProductRepository;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.*;
@@ -13,34 +11,35 @@ import java.io.File;
 @RequestMapping("/api/images")
 public class ImageController {
 
-    private final ProductRepository productRepository;
+    // Xóa phần ProductRepository vì không cần thiết nữa
+    // private final ProductRepository productRepository;
 
-    public ImageController(ProductRepository productRepository) {
-        this.productRepository = productRepository;
-    }
+    // Constructor không cần nữa vì không cần truy vấn DB
+    // public ImageController(ProductRepository productRepository) {
+    // this.productRepository = productRepository;
+    // }
 
     @GetMapping("/{filename:.+}")
     public ResponseEntity<Resource> getImage(@PathVariable String filename) {
-        // Kiểm tra trong DB có sản phẩm nào dùng ảnh này không
-        Product product = productRepository.findByImage(filename);
-        if (product == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-
         // Tìm ảnh trong thư mục "images/"
-        File file = new File("images/" + filename);
+        File file = new File("images/" + filename); // Hoặc đường dẫn tuyệt đối nếu cần
         if (!file.exists()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // Nếu file không tồn tại
         }
 
         Resource resource = new FileSystemResource(file);
 
-        MediaType mediaType = MediaType.IMAGE_JPEG;
-        if (filename.toLowerCase().endsWith(".png"))
+        // Xác định loại media (ảnh) dựa trên phần mở rộng của file
+        MediaType mediaType = MediaType.APPLICATION_OCTET_STREAM; // Mặc định nếu không phải hình ảnh
+        if (filename.toLowerCase().endsWith(".png")) {
             mediaType = MediaType.IMAGE_PNG;
-        else if (filename.toLowerCase().endsWith(".gif"))
+        } else if (filename.toLowerCase().endsWith(".jpg") || filename.toLowerCase().endsWith(".jpeg")) {
+            mediaType = MediaType.IMAGE_JPEG;
+        } else if (filename.toLowerCase().endsWith(".gif")) {
             mediaType = MediaType.IMAGE_GIF;
+        }
 
+        // Thêm thông tin headers để xác định loại content
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(mediaType);
 
