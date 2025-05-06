@@ -17,6 +17,9 @@ import ProductDetail from './components/pages/ProductDetail';
 import Checkout from './components/pages/Checkout';
 import CreateProduct from './admin/components/Product/CreateProduct';
 import EditProduct from './admin/components/Product/EditProduct';
+import CategoryList from './admin/components/Category/CategoryList';
+import CreateCategory from './admin/components/Category/CreateCategory';
+import EditCategory from './admin/components/Category/EditCategory';
 
 const router = createBrowserRouter([
   {
@@ -73,7 +76,19 @@ const router = createBrowserRouter([
       {
         path: 'product/edit/:id',
         element: <EditProduct />,
-      }
+      },
+      {
+        path: '/dashboard/category',
+        element: <CategoryList />,
+      },
+      {
+        path: '/dashboard/category/create',
+        element: <CreateCategory />,
+      },
+      {
+        path: '/dashboard/category/edit/:id',
+        element: <EditCategory />,
+      },
     ],
   },
 ]);

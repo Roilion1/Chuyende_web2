@@ -18,7 +18,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 public class Config {
     public static String vnp_PayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-    public static String vnp_ReturnUrl = "http://localhost:8080/vnpay_jsp/vnpay_return.jsp";
+    public static String vnp_ReturnUrl = "https://57e5-2405-4802-93c5-c890-91f2-ff94-f007-cf9f.ngrok-free.app/api/payment/vnpay-return";
     public static String vnp_TmnCode = "PWGO9FQQ";
     public static String vnp_Version = "2.1.0";
     public static String vnp_Command = "pay";
@@ -83,22 +83,20 @@ public class Config {
 
     public static String hmacSHA512(final String key, final String data) {
         try {
-
             if (key == null || data == null) {
                 throw new NullPointerException();
             }
             final Mac hmac512 = Mac.getInstance("HmacSHA512");
-            byte[] hmacKeyBytes = key.getBytes();
+            byte[] hmacKeyBytes = key.getBytes(StandardCharsets.UTF_8); // Sử dụng UTF-8 để chuyển chuỗi thành byte
             final SecretKeySpec secretKey = new SecretKeySpec(hmacKeyBytes, "HmacSHA512");
             hmac512.init(secretKey);
-            byte[] dataBytes = data.getBytes(StandardCharsets.UTF_8);
+            byte[] dataBytes = data.getBytes(StandardCharsets.UTF_8); // Chuyển dữ liệu vào mảng byte
             byte[] result = hmac512.doFinal(dataBytes);
             StringBuilder sb = new StringBuilder(2 * result.length);
             for (byte b : result) {
-                sb.append(String.format("%02x", b & 0xff));
+                sb.append(String.format("%02x", b & 0xff)); // Chuyển byte thành hex
             }
             return sb.toString();
-
         } catch (Exception ex) {
             return "";
         }
@@ -114,9 +112,12 @@ public class Config {
         return sb.toString();
     }
 
-    public static String getIpAddress(jakarta.servlet.http.HttpServletRequest req) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getIpAddress'");
+    public static String getIpAddress(jakarta.servlet.http.HttpServletRequest request) {
+        String ipAddress = request.getHeader("X-FORWARDED-FOR");
+        if (ipAddress == null || ipAddress.isEmpty()) {
+            ipAddress = request.getRemoteAddr();
+        }
+        return ipAddress;
     }
 
 }
